@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Social App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>📣 Create a Post</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <textarea name="content" rows="3" cols="50" placeholder="What's on your mind?" required></textarea><br>
+        <input type="file" name="image" accept="image/*"><br><br>
+        <button type="submit">Post</button>
+    </form>
+
+    <hr>
+
+    {% for post in posts %}
+    <div class="post">
+        <p>{{ post.content }}</p>
+        {% if post.image %}
+            <img src="{{ url_for('static', filename='uploads/' ~ post.image) }}" width="300"><br>
+        {% endif %}
+        <a href="/like/{{ loop.index0 }}">👍 Like ({{ post.likes }})</a> |
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank">🔗 Share</a>
+        <form action="/comment/{{ loop.index0 }}" method="POST">
+            <input name="comment" placeholder="Write a comment" required>
+            <button type="submit">Comment</button>
+        </form>
+        <ul>
+            {% for comment in post.comments %}
+            <li>{{ comment }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <hr>
+    {% endfor %}
+</body>
+</html>
